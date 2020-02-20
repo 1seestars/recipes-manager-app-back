@@ -1,0 +1,9 @@
+version: '2'
+
+services:
+  db:
+    container_name: test-mongo-base
+    image: mongo
+    restart: on-failure
+    ports:
+      - '27017:27017'
