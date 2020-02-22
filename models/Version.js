@@ -1,9 +1,7 @@
-const { Schema } = require("mongoose")
+const { Schema } = require("mongoose");
 
-const versionSchema = new Schema(
-    {   
-        description: String
-    }
-)
+const versionSchema = new Schema({
+  description: String
+});
 
-module.exports = { versionSchema }
+module.exports = { versionSchema };
