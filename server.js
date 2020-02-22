@@ -1,12 +1,14 @@
 const express = require('express')
 const mongoose = require('mongoose')
 const bodyParser = require('body-parser')
+const cors = require('cors')
 const { RecipeModel } = require('./models/Recipe')
 
 mongoose.connect('mongodb://localhost:27017/test', { useNewUrlParser: true, useUnifiedTopology: true })
 
 const app = express()
 app.use(bodyParser.json())
+app.use(cors())
 
 app.get("/recipes", async (request, response) => {
     const recipes = await RecipeModel.find({})
@@ -20,7 +22,8 @@ app.post("/recipe", async (request, response) => {
 })
 
 app.put("/recipe/:id", async (request, response) => {
-    const { body: { description }, params: { id } } = request
+    const { body: { name, description }, params: { id } } = request
+    await RecipeModel.findOneAndUpdate({ _id: id }, { name })
     const recipe = await RecipeModel.findOne({ _id: id })
     await recipe.versions.push({ description })
     await recipe.save()
