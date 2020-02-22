@@ -15,6 +15,12 @@ app.get("/recipes", async (request, response) => {
     return response.json(recipes)
 })
 
+app.get("/recipe/:id", async (request, response) => {
+    const { id } = request.params
+    const recipe = await RecipeModel.findOne({ _id: id })
+    return response.json(recipe)
+})
+
 app.post("/recipe", async (request, response) => {
     const { name, description } = request.body
     const newItem = await RecipeModel.create({ name, createdAt: Date.now(), versions: [{ description }] })
@@ -25,8 +31,10 @@ app.put("/recipe/:id", async (request, response) => {
     const { body: { name, description }, params: { id } } = request
     await RecipeModel.findOneAndUpdate({ _id: id }, { name })
     const recipe = await RecipeModel.findOne({ _id: id })
-    await recipe.versions.push({ description })
-    await recipe.save()
+    if (recipe.versions[recipe.versions.length - 1].description !== description) {
+        await recipe.versions.push({ description })
+        await recipe.save()
+    }
     return response.json(recipe)
 })
 
