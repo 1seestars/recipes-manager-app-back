@@ -14,51 +14,77 @@ app.use(bodyParser.json());
 app.use(cors());
 
 app.get("/recipes", async (request, response) => {
-  const recipes = await RecipeModel.find({});
-  return response.json(recipes);
+  try {
+    const recipes = await RecipeModel.find({});
+    return response.json(recipes);
+  } catch (e) {
+    return response.status(400).json({ message: e.message });
+  }
 });
 
 app.get("/recipe/:id", async (request, response) => {
-  const { id } = request.params;
-  const recipe = await RecipeModel.findOne({ _id: id });
-  return response.json(recipe);
+  try {
+    const { id } = request.params;
+    const recipe = await RecipeModel.findOne({ _id: id });
+    return response.json(recipe);
+  } catch (e) {
+    return response.status(400).json({ message: e.message });
+  }
 });
 
 app.post("/recipe", async (request, response) => {
-  const { name, description } = request.body;
-  const newItem = await RecipeModel.create({
-    name,
-    createdAt: Date.now(),
-    versions: [{ description }]
-  });
-  return response.json(newItem);
+  try {
+    const { name, description } = request.body;
+    const newItem = await RecipeModel.create({
+      name,
+      createdAt: Date.now() + 7200000,
+      versions: [{ description }]
+    });
+    return response.json(newItem);
+  } catch (e) {
+    return response.status(400).json({ message: e.message });
+  }
 });
 
 app.put("/recipe/:id", async (request, response) => {
-  const {
-    body: { name, description },
-    params: { id }
-  } = request;
-  await RecipeModel.findOneAndUpdate({ _id: id }, { name });
-  const recipe = await RecipeModel.findOne({ _id: id });
-  if (recipe.versions[recipe.versions.length - 1].description !== description) {
-    await recipe.versions.push({ description });
-    await recipe.save();
+  try {
+    const {
+      body: { name, description },
+      params: { id }
+    } = request;
+    await RecipeModel.findOneAndUpdate({ _id: id }, { name });
+    const recipe = await RecipeModel.findOne({ _id: id });
+    if (
+      recipe.versions[recipe.versions.length - 1].description !== description
+    ) {
+      await recipe.versions.push({ description });
+      await recipe.save();
+    }
+    return response.json(recipe);
+  } catch (e) {
+    return response.status(400).json({ message: e.message });
   }
-  return response.json(recipe);
 });
 
 app.delete("/recipe/:id", async (request, response) => {
-  const { id } = request.params;
-  const recipe = await RecipeModel.deleteOne({ _id: id });
-  recipe.message = "Recipe has been removed";
-  return response.json(recipe);
+  try {
+    const { id } = request.params;
+    const recipe = await RecipeModel.deleteOne({ _id: id });
+    recipe.message = "Recipe has been removed";
+    return response.json(recipe);
+  } catch (e) {
+    return response.status(400).json({ message: e.message });
+  }
 });
 
 app.delete("/recipes", async (request, response) => {
-  const recipes = await RecipeModel.deleteMany({});
-  recipes.message = "All recipes have been removed";
-  return response.json(recipes);
+  try {
+    const recipes = await RecipeModel.deleteMany({});
+    recipes.message = "All recipes have been removed";
+    return response.json(recipes);
+  } catch (e) {
+    return response.status(400).json({ message: e.message });
+  }
 });
 
 app.listen(4000, () => {

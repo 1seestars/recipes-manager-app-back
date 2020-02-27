@@ -1,11 +1,5 @@
-const { Schema, model } = require("mongoose");
-const { versionSchema } = require("./Version");
-
-const recipeSchema = new Schema({
-  name: String,
-  createdAt: Date,
-  versions: [versionSchema]
-});
+const { model } = require("mongoose");
+const { recipeSchema } = require("../schemas/Recipe");
 
 const RecipeModel = model("Recipe", recipeSchema);
 
