@@ -6,7 +6,8 @@ const { RecipeModel } = require("./models/Recipe");
 
 mongoose.connect("mongodb://localhost:27017/test", {
   useNewUrlParser: true,
-  useUnifiedTopology: true
+  useUnifiedTopology: true,
+  useFindAndModify: false
 });
 
 const app = express();

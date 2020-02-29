@@ -1,3 +1,11 @@
+## Available Scripts
+
+In the project directory, you can run:
+
+### `npm db`
+
+Runs database in Docker container.<br />
+
 ## Requests
 
 ### `GET:`
